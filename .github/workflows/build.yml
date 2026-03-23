@@ -1,0 +1,24 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compile
+        run: |
+          cc -framework CoreGraphics -framework CoreFoundation -O2 \
+            -Wall -Wextra -Werror \
+            -o zebra-mono-filter zebra-mono-filter.c
+
+      - name: Verify binary
+        run: |
+          file zebra-mono-filter
+          ./zebra-mono-filter 2>&1 | grep -q "Usage:" && echo "OK: prints usage"
