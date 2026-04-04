@@ -6,6 +6,8 @@ Crisp 1-bit monochrome printing for Zebra label printers on macOS.
 
 macOS renders PDFs through Quartz, which applies anti-aliasing (grayscale smoothing). Zebra thermal printers are 1-bit — they can only print pure black or white dots. When the default CUPS filter receives this anti-aliased grayscale raster, it dithers it, producing blurry text and barcodes.
 
+Previously I used solutions like an [Automator Script graciously provided by others](https://github.com/john-stephens/zebra-mac-label-automator) but that required extra clicks, didn't work in web browsers that used their own print dialogs, and was slow if you had a bunch of labels to print. I _only_ use this machine for shipping label printing so I wanted to make it as dead-simple and fast as possible. 
+
 ## The fix
 
 A native CUPS filter that bypasses the macOS rendering pipeline entirely. It uses CoreGraphics directly with **all anti-aliasing disabled**, renders to an 8-bit grayscale bitmap, applies a hard black/white threshold, and outputs ZPL `^GFA` commands straight to the printer.
